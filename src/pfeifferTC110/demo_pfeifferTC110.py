@@ -13,9 +13,10 @@ print(devices)
 # %%
 # Demonstrate pump
 import PfeifferTC110
-pump = PfeifferTC110.TC110()
+
 try:
-    pump.run_timed(15)
+    pump = PfeifferTC110.TC110()
+    pump.run_timed(5)
 finally:
     pump.close()
 
