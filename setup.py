@@ -21,8 +21,8 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'pyvisa-py'
-        'pyusb'
+        'pyvisa-py',
+        'pyusb',
         'pyserial'
     ]
 )
