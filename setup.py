@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="PfeifferTC110-Cyberly100", # Replace with your own username
-    version="0.7.0",
+    version="0.8.0",
     author="Lucas Schweickert",
     author_email="cyberfly@gmx.net",
     description="A small package for communicating with Pfeiffer vaccuum electronics (e.g. TC110) via RS485 and their telegram protocol.",
@@ -22,5 +22,7 @@ setuptools.setup(
     python_requires='>=3.6',
     install_requires=[
         'pyvisa-py'
+        'pyusb'
+        'pyserial'
     ]
 )

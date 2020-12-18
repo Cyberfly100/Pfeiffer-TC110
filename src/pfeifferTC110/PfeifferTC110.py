@@ -2,6 +2,7 @@
 import pyvisa as visa
 from pyvisa.constants import StopBits, Parity
 import logging
+logging.basicConfig(filename='TC110.log', encoding='utf-8', level=logging.WARNING)
 from time import sleep
 
 class TC110:
@@ -15,11 +16,10 @@ class TC110:
         self.rm = visa.ResourceManager('@py')
         self.devices = self.rm.list_resources()
         if port == None:
-            try:
+            if len(self.devices)>0:
                 self.port = self.devices[0]
-            except IndexError as err:
-                print(err)
-                print('No device connected or not de-initialized. Try connecting/turning on the pump or restarting the python kernel.')
+            else:
+                raise Exception('No device connected or not de-initialized. Try connecting/turning on the pump or restarting the python kernel.')
         else:
             self.port = port
         self.data_types = {0:{'description':'False / true', 'length':'06', 'example':'000000 / 111111'},
@@ -165,6 +165,7 @@ class TC110:
 
     def receive_message(self):
         full_response = self.inst.read(termination='\r')
+        logging.debug(f'Received: {full_response}')
         if not self._received_ok(full_response):
             logging.warning('Checksum error.')
             return None
@@ -192,7 +193,7 @@ class TC110:
         message_string = device_id+action+param_number+payload_length+payload
         checksum = self._calculate_checksum(message_string)
         full_message = message_string+checksum
-        logging.info(f'Sending: {full_message}')
+        logging.debug(f'Sending: {full_message}')
         self.inst.write(full_message)
         return full_message
 
@@ -214,6 +215,26 @@ class TC110:
             return int(message["payload"])
         else:
             logging.warning('Speed not received sucessfully.')
+            return None
+
+    def get_power(self, device_id=None):
+        self.send_message(command=self.commands["DrvPower"], device_id=device_id)
+        message = self.receive_message()
+        if message:
+            #FIXME check for error messages from pump
+            return int(message["payload"])
+        else:
+            logging.warning('Power not received sucessfully.')
+            return None
+
+    def get_current(self, device_id=None):
+        self.send_message(command=self.commands["DrvCurrent"], device_id=device_id)
+        message = self.receive_message()
+        if message:
+            #FIXME check for error messages from pump
+            return float(message["payload"])
+        else:
+            logging.warning('Current not received sucessfully.')
             return None
 
     def start(self, device_id=None):
