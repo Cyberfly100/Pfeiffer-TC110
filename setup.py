@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="PfeifferTC110-Cyberly100", # Replace with your own username
+    name="PfeifferTC110-Cyberfly100", # Replace with your own username
     version="0.8.0",
     author="Lucas Schweickert",
     author_email="cyberfly@gmx.net",
