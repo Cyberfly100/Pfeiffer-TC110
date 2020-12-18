@@ -15,7 +15,11 @@ class TC110:
         self.rm = visa.ResourceManager('@py')
         self.devices = self.rm.list_resources()
         if port == None:
-            self.port = self.devices[0]
+            try:
+                self.port = self.devices[0]
+            except IndexError as err:
+                print(err)
+                print('No device connected or not de-initialized. Try connecting/turning on the pump or restarting the python kernel.')
         else:
             self.port = port
         self.data_types = {0:{'description':'False / true', 'length':'06', 'example':'000000 / 111111'},
