@@ -13,10 +13,10 @@ Install with `pip install git+https://github.com/Cyberfly100/Pfeiffer-TC110`.
 
 ### Try it out
 
-    import PfeifferTC110
+    import pfeifferTC110
 
     try:
-        pump = PfeifferTC110.TC110()
+        pump = pfeifferTC110.TC110()
         pump.run_timed(5)
     finally:
         pump.close()
