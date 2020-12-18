@@ -197,12 +197,41 @@ class TC110:
         self.inst.write(full_message)
         return full_message
 
+    @staticmethod
+    def cast(payload,command):
+        data_type = command["data type"]
+        if command["data type"] == 0:
+            out = bool(int(payload))
+        elif command["data type"] == 1:
+            out = int(payload)
+        elif command["data type"] == 2:
+            out = float(payload)
+        elif command["data type"] == 4:
+            out = str(payload)
+        elif command["data type"] == 7:
+            out = int(payload)
+        elif command["data type"] == 11:
+            out = str(payload)
+        else:
+            raise Exception('Unknwon data type.')
+        return out
+
+    def get_fromkey(self, command_key, device_id=None):
+        self.send_message(command=self.commands[command_key], device_id=device_id)
+        message = self.receive_message()
+        if message:
+            #FIXME check for error messages from pump
+            return self.cast(message['payload'],self.commands[command_key])
+        else:
+            logging.warning(f'{command_key} not received sucessfully.')
+            return None
+
     def get_pressure(self, device_id=None):        
         self.send_message(command=self.commands["Pressure"], device_id=device_id)
         message = self.receive_message()
         if message:
             #FIXME check for error messages from pump
-            return message['payload']
+            return self.cast(message['payload'],self.commands["Pressure"])
         else:
             logging.warning('Pressure not received sucessfully.')
             return None
@@ -212,7 +241,7 @@ class TC110:
         message = self.receive_message()
         if message:
             #FIXME check for error messages from pump
-            return int(message["payload"])
+            return self.cast(message['payload'],self.commands["ActualSpd"])
         else:
             logging.warning('Speed not received sucessfully.')
             return None
@@ -222,7 +251,7 @@ class TC110:
         message = self.receive_message()
         if message:
             #FIXME check for error messages from pump
-            return int(message["payload"])
+            return self.cast(message['payload'],self.commands["DrvPower"])
         else:
             logging.warning('Power not received sucessfully.')
             return None
@@ -232,7 +261,7 @@ class TC110:
         message = self.receive_message()
         if message:
             #FIXME check for error messages from pump
-            return float(message["payload"])
+            return self.cast(message['payload'],self.commands["DrvCurrent"])
         else:
             logging.warning('Current not received sucessfully.')
             return None
@@ -242,7 +271,7 @@ class TC110:
         message = self.receive_message()
         if message:
             #FIXME check for error messages from pump
-            return bool(int(message["payload"]))
+            return self.cast(message['payload'],self.commands["PumpgStatn"])
         else:
             logging.warning('Reply not received sucessfully.')
             return None
@@ -252,7 +281,7 @@ class TC110:
         message = self.receive_message()
         if message:
             #FIXME check for error messages from pump
-            return bool(int(message["payload"]))
+            return self.cast(message['payload'],self.commands["PumpgStatn"])
         else:
             logging.warning('Reply not received sucessfully.')
             return None
@@ -266,7 +295,7 @@ class TC110:
             message = self.receive_message()
             if message:
                 #FIXME check for error messages from pump
-                return bool(int(message["payload"]))
+                return self.cast(message['payload'],self.commands["PumpgStatn"])
             else:
                 logging.warning('Reply not received sucessfully.')
                 return None
@@ -279,7 +308,7 @@ class TC110:
         message = self.receive_message()
         if message:
             #FIXME check for error messages from pump
-            return bool(int(message["payload"]))
+            return self.cast(message['payload'],self.commands["PumpgStatn"])
         else:
             logging.warning('On/off status not received sucessfully.')
             return None
