@@ -1,4 +1,5 @@
 This is a simple package to communicate with Pfeiffer vaccum hardware (e.g. TC110) via RS485 and the telegram protocol.
+[Here it is](https://photos.app.goo.gl/mTauQPGxBz47QTyJ6) running a Pfeiffer HiCube 80 Eco from a Raspberry Pi touch screen.
 
 
 ### Prerequisites
